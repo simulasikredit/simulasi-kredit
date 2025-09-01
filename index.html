@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulasi KMG Version 1.0.0</title>
+<style>
+
+/* gaya untuk catatan saldo blokir */
+.blokir-note {
+  font-size: 12px;
+  font-style: italic;
+  color: #c0392b; /* merah sedikit elegan */
+  display: inline-block;
+}
+
+/* sembunyikan catatan saat cetak tanpa tabel (dua kelas yang ada di skrip) */
+@media print {
+  body.print-no-table .blokir-note,
+  body.hide-table .blokir-note {
+    display: none !important;
+  }
+}
+
+
+@media print {
+  /* Sembunyikan elemen yang tidak perlu saat print-no-table */
+  body.print-no-table .tab-container,
+  body.print-no-table .btn-group,
+  body.print-no-table #tabelAngsuran,
+  body.print-no-table h3,
+  body.print-no-table h2 {
+    display: none !important;
+  }
+
+  /* Tampilkan header cetak */
+  body.print-no-table #printHeader {
+    display: block !important;
+  }
+
+  /* Halaman A4 */
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    overflow: hidden;
+  }
+
+  /* Font & spacing */
+  body.print-no-table * {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Dua kolom untuk kartu data */
+  body.print-no-table #simulasi {
+    column-count: 2;
+    column-gap: 15px;
+  }
+
+  /* Pastikan setiap card tidak terbelah di tengah */
+  body.print-no-table .card {
+    page-break-inside: avoid;
+    margin-bottom: 8px;
+    padding: 8px;
+    break-inside: avoid-column;
+  }
+
+  /* Grid input lebih rapat */
+  body.print-no-table .grid {
+    grid-template-columns: 140px 1fr !important;
+    gap: 5px !important;
+    margin-bottom: 4px !important;
+  }
+}
+
+
+@media print {
+  /* Sembunyikan elemen yang tidak perlu */
+  body.print-no-table .tab-container,
+  body.print-no-table .btn-group,
+  body.print-no-table #tabelAngsuran,
+  body.print-no-table h3,
+  {
+    display: none !important;
+  }
+
+  /* Tampilkan header cetak */
+  body.print-no-table #printHeader {
+    display: block !important;
+  }
+
+  /* Setting ukuran halaman */
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    overflow: hidden;
+  }
+
+  /* Perkecil font & rapatkan jarak supaya muat 1 halaman */
+  body.print-no-table * {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Pastikan tidak ada elemen yang memaksa pindah halaman */
+  body.print-no-table .card {
+    page-break-inside: avoid;
+    margin-bottom: 8px;
+    padding: 10px;
+  }
+}
+
+
+@media print {
+  body.print-no-table .tab-container,
+  body.print-no-table .btn-group,
+  body.print-no-table #tabelAngsuran,
+  body.print-no-table h3,
+  body.print-no-table h2 {
+    display: none !important;
+  }
+
+  body.print-no-table #printHeader {
+    display: block !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  html, body {
+    width: 210mm;
+    height: auto; /* ✅ biar tidak terpotong */
+  }
+
+  body.print-no-table * {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+  }
+
+  body.print-no-table #simulasi {
+    column-count: 2;
+    column-gap: 15px;
+  }
+
+  body.print-no-table .card {
+    page-break-inside: avoid;
+    break-inside: avoid-column;
+    margin-bottom: 8px;
+    padding: 8px;
+  }
+
+  body.print-no-table .grid {
+    grid-template-columns: 140px 1fr !important;
+    gap: 5px !important;
+    margin-bottom: 4px !important;
+  }
+}
+
+
+
+@media print {
+  body.hide-table #tabelAngsuran {
+    display: none !important;
+  }
+  body.hide-table h3 {
+    display: none !important; /* sembunyikan judul "Rincian Angsuran Bulanan" */
+  }
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0 10px 40px 10px;
+    background: #f5f7fa;
+    color: #333;
+}
+.tab-container {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #3498db;
+    padding: 6px;
+    gap: 6px;
+}
+.tab-container button {
+    flex: 1;
+    padding: 12px;
+    background: #3498db;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.tab-container button.active {
+    background: #2980b9;
+}
+.tab-content { display: none; padding: 20px 0; }
+.tab-content.active { display: block; }
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+label { font-weight: 600; }
+input, select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.yellow { background-color: #fff8c6; }
+.blue {
+    background-color: #e6f7ff;
+    font-weight: bold;
+    border: 1px solid #b3e5fc;
+    padding: 8px;
+    border-radius: 6px;
+}
+.btn-group { display:flex; justify-content:center; gap:10px; margin-top:10px; flex-wrap:wrap; }
+button.action { padding:10px 20px; background:#3498db; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+button.action:hover { background:#2980b9; }
+.warning {
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+    background-color: #e74c3c;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    display: none;
+    line-height: 1.5em;
+}
+.table-wrap { overflow-x:auto; }
+table { border-collapse: collapse; font-size: 13px; width:100%; }
+th, td { border:1px solid #999; padding:6px; text-align:center; }
+th { background-color:#d9eaff; font-weight:bold; }
+td.left { text-align:left; }
+.shaded { background-color:#ccc; }
+.watermark { position: fixed; bottom: 10px; right: 15px; font-size: 12px; color: rgba(0,0,0,0.4); font-style: italic; z-index:999; }
+@media print {
+  .tab-container { position: static; }
+}
+
+/* Running text modern */
+.running-text {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(90deg, #3498db, #8e44ad);
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.2);
+}
+
+.running-text span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: runningText 18s linear infinite;
+}
+
+@keyframes runningText {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Sembunyikan saat cetak */
+@media print {
+  .running-text {
+    display: none !important;
+  }
+}
+
+
+</style>
+</head>
+<body>
+
+<div id="printHeader" style="display:none; text-align:center; font-weight:bold; font-size:18px; margin-bottom:10px;">
+    SIMULASI KREDIT BANK NTT<br>
+    <span id="printDate" style="font-size:14px; font-weight:normal;"></span>
+</div>
+
+
+<div class="tab-container">
+    <button class="active" onclick="openTab(event,'simulasi')">Simulasi Kredit</button>
+    <button onclick="openTab(event,'ijp')">Tarif IJP Jamkrida</button>
+    <button onclick="openTab(event,'askrida')">Tarif IJP Askrida</button>
+</div>
+
+<!-- Tab Simulasi Kredit (versi v2) -->
+<div id="simulasi" class="tab-content active">
+<h2 style="text-align:center;">Simulasi Kredit - Metode Annuitas Bulanan</h2>
+
+<div class="card">
+    <div class="grid">
+        <label>Nama Nasabah</label>
+        <input type="text" id="namaNasabah" class="yellow">
+    </div>
+    <div class="grid">
+        <label>Nama Petugas / Marketing</label>
+        <input type="text" id="namaPetugas" class="yellow">
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="grid"><label>Tanggal Pencairan</label><input type="date" id="tanggalCek" class="yellow"></div>
+    <div class="grid"><label>Pekerjaan</label>
+        <select id="pekerjaan" class="yellow"><option value="">-- Pilih --</option><option value="Guru">Guru</option><option value="PNS">PNS</option><option value="PPPK">PPPK</option></select>
+    </div>
+    <div class="grid"><label>Tanggal Lahir</label><input type="date" id="tanggalLahir" class="yellow"></div>
+    <div class="grid"><label>Tanggal SK PPPK</label><input type="date" id="tanggalSK" class="yellow"></div>
+    <div class="grid"><label>Status Perkawinan</label>
+        <select id="statusKawin" class="yellow"><option value="">-- Pilih --</option><option value="Kawin">Kawin</option><option value="Tidak Kawin">Tidak Kawin</option></select>
+    </div>
+    <div class="grid"><label>Jenis Kelamin</label>
+        <select id="jenisKelamin" class="yellow"><option value="">-- Pilih --</option><option value="Laki-Laki">Laki-Laki</option><option value="Perempuan">Perempuan</option></select>
+    </div>
+    <div class="grid"><label>Umur Pensiun</label><div id="umurPensiun" class="blue"></div></div>
+    <div class="grid"><label>Umur & Masa Kerja</label><div id="hasilUmur" class="blue"></div></div>
+</div>
+
+<div class="card">
+    <div class="grid"><label>Gaji</label><input type="number" id="gaji" class="yellow"></div>
+    <div class="grid"><label>Penghasilan Lain</label><input type="number" id="penghasilanLain" class="yellow"></div>
+    <div class="grid"><label>Angsuran 1</label><input type="number" id="angsuran1" class="yellow"></div>
+    <div class="grid"><label>Angsuran 2</label><input type="number" id="angsuran2" class="yellow"></div>
+    <div class="grid"><label>Plafon Kredit</label><input type="number" id="plafonInput" class="yellow"></div>
+    <div class="grid"><label>Jangka Waktu (bulan)</label><input type="number" id="jangkaWaktu" class="yellow"></div>
+    <div class="grid"><label>Bunga (%)</label><input type="number" id="bunga" class="yellow" value="12"></div>
+</div>
+
+<div class="card">
+    <div class="grid"><label>Plafond Maksimum</label><div id="plafondMax" class="blue"></div></div>
+    <div class="grid"><label>Angsuran Bulanan (Annuitas)</label><div id="angsuran" class="blue"></div></div>
+    <div class="grid"><label>Total Angsuran</label><div id="totalAngsuran" class="blue"></div></div>
+    <div class="grid"><label>Sisa Gaji</label><div id="sisaGaji" class="blue"></div></div>
+    <div class="grid"><label>Persentase Angsuran vs Gaji</label><div id="persentase" class="blue"></div></div>
+
+    <div class="grid"><label>Biaya Administrasi (%)</label><input type="number" id="persenAdmin" class="yellow" step="0.01"></div>
+    <div class="grid"><label>Nominal Biaya Administrasi</label><div id="nominalAdmin" class="blue"></div></div>
+
+    <div class="grid"><label>Biaya Asuransi (%)</label><input type="number" id="persenAsuransi" class="yellow" step="0.01"></div>
+    <div class="grid"><label>Nominal Biaya Asuransi</label><div id="nominalAsuransi" class="blue"></div></div>
+
+    <div class="grid">
+    <label>Saldo Blokir</label>
+    <div>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+            <label><input type="radio" name="modeBlokir" id="blokirOtomatis" checked> Hitung Otomatis</label>
+            <label><input type="radio" name="modeBlokir" id="blokirManual"> Input Manual</label>
+        </div>
+        <input type="number" id="saldoBlokir" class="yellow" step="1" readonly>
+        <small class="blokir-note">Dana blokir = 1 kali angsuran + biaya administrasi tabungan (Rp 1.500,-) selama JW kredit. Atau input manual sesuai kebutuhan.</small>
+    </div>
+</div>
+
+    <div class="grid"><label>Pelunasan Pinjaman 1</label><input type="number" id="pelunasan1" class="yellow" step="1"></div>
+    <div class="grid"><label>Pelunasan Pinjaman 2</label><input type="number" id="pelunasan2" class="yellow" step="1"></div>
+
+    <div class="grid"><label>Sisa yang diterima nasabah</label><div id="sisaNasabah" class="blue"></div></div>
+    <div id="peringatan" class="warning"></div>
+</div>
+
+<div class="btn-group">
+    <button class="action" onclick="cetakTanpaTabel()">Cetak PDF (Tanpa Tabel)</button>
+    <button class="action" onclick="cetakTabel()">Cetak Tabel</button>
+    <button class="action" onclick="clearData()">Clear</button>
+</div>
+
+
+<div class="card">
+    <h3>Rincian Angsuran Bulanan</h3>
+    <div class="table-wrap">
+        <table id="tabelAngsuran">
+            <thead><tr><th>Bulan</th><th>Pokok</th><th>Bunga</th><th>Total Angsuran</th><th>Sisa Saldo</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+</div> <!-- end simulasi tab -->
+
+<!-- Tab IJP Jamkrida -->
+<div id="ijp" class="tab-content">
+    <h2 style="text-align:center;">TARIF IJP JAMKRIDA (FEE BASE 12.5%)</h2>
+    <div class="card table-wrap">
+        <table>
+            <thead>
+                <tr><th>Tahun</th><th>Bulan</th><th>MTG ASN &amp; P3K</th><th>SEKAWAN</th><th>PRA/PENSIUN</th><th>DPRD</th><th>DL</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>12</td><td>0.35%</td><td>0.12%</td><td>0.66%</td><td>0.50%</td><td>0.30%</td></tr>
+                <tr><td>2</td><td>24</td><td>0.70%</td><td>0.28%</td><td>1.20%</td><td>1.00%</td><td>0.65%</td></tr>
+                <tr><td>3</td><td>36</td><td>1.06%</td><td>0.45%</td><td>1.75%</td><td>1.30%</td><td>1.00%</td></tr>
+                <tr><td>4</td><td>48</td><td>1.42%</td><td>0.55%</td><td>2.20%</td><td>1.75%</td><td>1.30%</td></tr>
+                <tr><td>5</td><td>60</td><td>1.78%</td><td>0.77%</td><td>2.75%</td><td>2.20%</td><td>1.55%</td></tr>
+                <tr><td>6</td><td>72</td><td>2.15%</td><td>0.90%</td><td>3.30%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>7</td><td>84</td><td>2.15%</td><td>0.95%</td><td>3.60%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>8</td><td>96</td><td>2.15%</td><td>0.95%</td><td>3.95%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>9</td><td>108</td><td>2.65%</td><td>1.10%</td><td>4.25%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>10</td><td>120</td><td>2.65%</td><td>1.20%</td><td>4.75%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>11</td><td>132</td><td>2.65%</td><td>1.40%</td><td>5.66%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>12</td><td>144</td><td>2.65%</td><td>1.60%</td><td>6.14%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>13</td><td>156</td><td>2.90%</td><td>1.80%</td><td>6.60%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>14</td><td>168</td><td>2.90%</td><td>1.80%</td><td>7.05%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>15</td><td>180</td><td>2.90%</td><td>1.80%</td><td>7.84%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>16</td><td>192</td><td>3.10%</td><td>2.30%</td><td>7.90%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>17</td><td>204</td><td>3.10%</td><td>2.30%</td><td>8.30%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>18</td><td>216</td><td>3.10%</td><td>2.30%</td><td>8.69%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>19</td><td>228</td><td>3.10%</td><td>2.30%</td><td>9.06%</td><td>0.00%</td><td class="shaded"></td></tr>
+                <tr><td>20</td><td>240</td><td>3.10%</td><td>2.30%</td><td>9.42%</td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>21</td><td>252</td><td>3.40%</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>22</td><td>264</td><td>3.40%</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>23</td><td>276</td><td>3.40%</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>24</td><td>288</td><td>3.40%</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
+                <tr><td>25</td><td>300</td><td>3.40%</td><td>PEN</td><td>95.00%</td><td>5.00%</td><td class="shaded"></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Tab Askrida will be added below when file saved -->
+
+<div class="watermark">Credit by : RANDY36 #Version 1.0.0</div>
+
+<script>
+function openTab(evt, tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-container button').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    evt.currentTarget.classList.add('active');
+}
+
+// Format Rupiah helper
+function formatRupiah(angka) {
+    if (angka === null || angka === undefined || angka === "") return "-";
+    let n = Number(angka);
+    if (isNaN(n)) return "-";
+    return "Rp " + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Simulasi Kredit script (from v2)
+function hitung() {
+    const pekerjaan = document.getElementById("pekerjaan").value;
+    const tglCekVal = document.getElementById("tanggalCek").value;
+    const tglLahirVal = document.getElementById("tanggalLahir").value;
+    const tglSKVal = document.getElementById("tanggalSK").value;
+    const statusKawin = document.getElementById("statusKawin").value;
+    const jenisKelamin = document.getElementById("jenisKelamin").value;
+    const gaji = parseFloat(document.getElementById("gaji").value) || 0;
+    const penghasilanLain = parseFloat(document.getElementById("penghasilanLain").value) || 0;
+    const angsuran1 = parseFloat(document.getElementById("angsuran1").value) || 0;
+    const angsuran2 = parseFloat(document.getElementById("angsuran2").value) || 0;
+    const plafon = parseFloat(document.getElementById("plafonInput").value) || 0;
+    const bunga = parseFloat(document.getElementById("bunga").value) || 0;
+    const jangkaWaktu = parseInt(document.getElementById("jangkaWaktu").value) || 0;
+
+    let warningMsg = "";
+
+    if (!tglCekVal || !tglLahirVal) {
+        document.getElementById("umurPensiun").innerText = "";
+        document.getElementById("hasilUmur").innerText = "";
+    } else {
+        const tglCek = new Date(tglCekVal);
+        const tglLahir = new Date(tglLahirVal);
+        let umurTahun = tglCek.getFullYear() - tglLahir.getFullYear();
+        let umurBulan = tglCek.getMonth() - tglLahir.getMonth();
+        let umurHari = tglCek.getDate() - tglLahir.getDate();
+        if (umurHari < 0) { umurHari += 30; umurBulan--; }
+        if (umurBulan < 0) { umurBulan += 12; umurTahun--; }
+
+        let umurBulanTotal = umurTahun * 12 + umurBulan;
+
+        let umurPensiun = pekerjaan === "Guru" ? 60 : pekerjaan === "PNS" ? 58 : 5;
+        document.getElementById("umurPensiun").innerText = umurPensiun;
+
+        let akhirMasaKerja;
+        if (pekerjaan === "PPPK" && tglSKVal) {
+            akhirMasaKerja = new Date(tglSKVal);
+            akhirMasaKerja.setFullYear(akhirMasaKerja.getFullYear() + 5);
+        } else {
+            akhirMasaKerja = new Date(tglLahirVal);
+            akhirMasaKerja.setFullYear(akhirMasaKerja.getFullYear() + umurPensiun);
+        }
+
+        let masaKerjaTahun = akhirMasaKerja.getFullYear() - tglCek.getFullYear();
+        let masaKerjaBulan = akhirMasaKerja.getMonth() - tglCek.getMonth();
+        let masaKerjaHari = akhirMasaKerja.getDate() - tglCek.getDate();
+        if (masaKerjaHari < 0) { masaKerjaHari += 30; masaKerjaBulan--; }
+        if (masaKerjaBulan < 0) { masaKerjaBulan += 12; masaKerjaTahun--; }
+        let masaKerjaBulanTotal = masaKerjaTahun * 12 + masaKerjaBulan;
+
+        document.getElementById("hasilUmur").innerText =
+            `Umur ${umurTahun} Tahun ${umurBulan} Bulan ${umurHari} Hari (${umurBulanTotal} bulan) dan Sisa Masa Kerja ${masaKerjaTahun} Tahun ${masaKerjaBulan} Bulan ${masaKerjaHari} Hari (${masaKerjaBulanTotal} bulan)`;
+
+        if (
+            (statusKawin === "Tidak Kawin" && umurTahun < 21) ||
+            (statusKawin === "Kawin" && jenisKelamin === "Laki-Laki" && umurTahun < 18) ||
+            (statusKawin === "Kawin" && jenisKelamin === "Perempuan" && umurTahun < 17)
+        ) {
+            warningMsg += "USIA MINIMUM TIDAK SESUAI KETENTUAN\n";
+        }
+
+        if (jangkaWaktu > masaKerjaBulanTotal) {
+            warningMsg += "JANGKA WAKTU MELEBIHI MASA KERJA\n";
+        }
+    }
+
+    let i = bunga / 100 / 12;
+    let n = jangkaWaktu;
+    let angsuranBulanan = 0;
+    if (n > 0) {
+        if (i === 0) angsuranBulanan = plafon / n;
+        else angsuranBulanan = plafon * i / (1 - Math.pow(1 + i, -n));
+    }
+    document.getElementById("angsuran").innerText = angsuranBulanan ? formatRupiah(Math.round(angsuranBulanan)) : "-";
+
+	let saldoBlokir;
+if (document.getElementById("blokirOtomatis").checked) {
+    if (angsuranBulanan > 0 && jangkaWaktu > 0) {
+        saldoBlokir = angsuranBulanan + (jangkaWaktu * 1500);
+        document.getElementById("saldoBlokir").value = Math.round(saldoBlokir);
+    } else {
+        saldoBlokir = 0;
+        document.getElementById("saldoBlokir").value = "";
+    }
+    document.getElementById("saldoBlokir").readOnly = true;
+} else {
+    saldoBlokir = parseFloat(document.getElementById("saldoBlokir").value) || 0;
+    document.getElementById("saldoBlokir").readOnly = false;
+}
+
+
+
+
+    let totalAngsuran = angsuran1 + angsuran2 + angsuranBulanan;
+    document.getElementById("totalAngsuran").innerText = totalAngsuran ? formatRupiah(Math.round(totalAngsuran)) : "-";
+
+    let persentase = (gaji + penghasilanLain) ? (totalAngsuran / (gaji + penghasilanLain)) * 100 : 0;
+    document.getElementById("persentase").innerText = (gaji+penghasilanLain) ? persentase.toFixed(2) + "%" : "-";
+
+    let sisaGaji = gaji - totalAngsuran;
+    document.getElementById("sisaGaji").innerText = isFinite(sisaGaji) ? formatRupiah(Math.round(sisaGaji)) : "-";
+
+    document.getElementById("plafondMax").innerText = plafon ? formatRupiah(Math.round(plafon)) : "-";
+
+    let persenAdmin = parseFloat(document.getElementById("persenAdmin").value) || 0;
+    let persenAsuransi = parseFloat(document.getElementById("persenAsuransi").value) || 0;
+    let nominalAdmin = (plafon * persenAdmin) / 100;
+    let nominalAsuransi = (plafon * persenAsuransi) / 100;
+    document.getElementById("nominalAdmin").innerText = formatRupiah(Math.round(nominalAdmin));
+    document.getElementById("nominalAsuransi").innerText = formatRupiah(Math.round(nominalAsuransi));
+
+    let pelunasan1 = parseFloat(document.getElementById("pelunasan1").value) || 0;
+    let pelunasan2 = parseFloat(document.getElementById("pelunasan2").value) || 0;
+    let sisaNasabah = plafon - nominalAdmin - nominalAsuransi - saldoBlokir - pelunasan1 - pelunasan2;
+    document.getElementById("sisaNasabah").innerText = isFinite(sisaNasabah) ? formatRupiah(Math.round(sisaNasabah)) : "-";
+
+    if (persentase > 70 || totalAngsuran > gaji) {
+        warningMsg += "ANGSURAN > GAJI / PERSENTASE > 70%\n";
+    }
+
+    const peringatanEl = document.getElementById("peringatan");
+    if (warningMsg) {
+        peringatanEl.innerText = warningMsg.trim();
+        peringatanEl.style.display = "block";
+    } else {
+        peringatanEl.innerText = "";
+        peringatanEl.style.display = "none";
+    }
+
+    let saldo = plafon;
+    let tbody = document.querySelector("#tabelAngsuran tbody");
+    tbody.innerHTML = "";
+    if (n > 0 && angsuranBulanan > 0) {
+        for (let m = 1; m <= n; m++) {
+            let bungaBulan = saldo * i;
+            let pokok = angsuranBulanan - bungaBulan;
+            if (m === n) pokok = Math.max(0, saldo);
+            saldo -= pokok;
+            let row = `<tr>
+                <td>${m.toLocaleString("id-ID")}</td>
+                <td style="text-align:right;">${formatRupiah(Math.round(pokok))}</td>
+                <td style="text-align:right;">${formatRupiah(Math.round(bungaBulan))}</td>
+                <td style="text-align:right;">${formatRupiah(Math.round(angsuranBulanan))}</td>
+                <td style="text-align:right;">${formatRupiah(Math.max(0, Math.round(saldo)))}</td>
+            </tr>`;
+            tbody.innerHTML += row;
+        }
+    }
+}
+
+// Storage functions (tidak diubah)
+function simpanData() {
+    const data = {};
+    document.querySelectorAll("input, select").forEach(el => data[el.id] = el.value);
+    document.getElementById("saldoBlokir").value = "";
+	localStorage.setItem("simulasiKreditData", JSON.stringify(data));
+    alert("Data disimpan!");
+}
+function muatData() {
+    const data = JSON.parse(localStorage.getItem("simulasiKreditData") || "{}");
+    if (!Object.keys(data).length) { alert("Belum ada data tersimpan!"); return; }
+    for (let key in data) { if (document.getElementById(key)) document.getElementById(key).value = data[key]; }
+    hitung();
+    alert("Data dimuat!");
+}
+function clearData() {
+    document.querySelectorAll("input, select").forEach(el => el.value = "");
+    document.getElementById("umurPensiun").innerText = "";
+    document.getElementById("hasilUmur").innerText = "";
+    document.getElementById("angsuran").innerText = "";
+    document.getElementById("totalAngsuran").innerText = "";
+    document.getElementById("persentase").innerText = "";
+    document.getElementById("sisaGaji").innerText = "";
+    document.getElementById("plafondMax").innerText = "";
+    document.getElementById("nominalAdmin").innerText = "";
+    document.getElementById("nominalAsuransi").innerText = "";
+    document.getElementById("sisaNasabah").innerText = "";
+    document.getElementById("peringatan").style.display = "none";
+    document.querySelector("#tabelAngsuran tbody").innerHTML = "";
+}
+
+// Setup listeners
+function setupListeners() {
+    const els = document.querySelectorAll("input:not(#saldoBlokir), select");
+    els.forEach(el => { el.addEventListener("input", hitung); el.addEventListener("change", hitung); });
+
+    // Tambahan listener untuk mode saldo blokir & input manual
+    document.getElementById("blokirOtomatis").addEventListener("change", hitung);
+    document.getElementById("blokirManual").addEventListener("change", hitung);
+    document.getElementById("saldoBlokir").addEventListener("input", hitung);
+
+    hitung();
+}
+
+document.addEventListener("DOMContentLoaded", setupListeners);
+
+function cetakTanpaTabel() {
+    // Tambahkan class untuk sembunyikan tabel
+    document.body.classList.add("hide-table");
+    window.print();
+    // Hapus class setelah print selesai
+    setTimeout(() => document.body.classList.remove("hide-table"), 500);
+}
+
+function cetakTanpaTabel() {
+    // Isi tanggal cetak
+    const today = new Date();
+    document.getElementById("printDate").innerText =
+        "Tanggal Cetak: " + today.toLocaleDateString("id-ID");
+
+    // Tampilkan header cetak
+    document.getElementById("printHeader").style.display = "block";
+
+    // Tambahkan class print khusus
+    document.body.classList.add("print-no-table");
+
+    // Cetak
+    window.print();
+
+    // Reset setelah cetak
+    setTimeout(() => {
+        document.body.classList.remove("print-no-table");
+        document.getElementById("printHeader").style.display = "none";
+    }, 500);
+}
+
+function cetakTabel() {
+    // Simpan tampilan asli
+    const originalContent = document.body.innerHTML;
+    
+    // Ambil tabel angsuran
+    const tableContent = document.querySelector(".card .table-wrap").outerHTML;
+    const watermark = `
+        <div class="watermark" style="
+            position: fixed;
+            bottom: 10px;
+            right: 15px;
+            font-size: 12px;
+            color: rgba(0,0,0,0.4);
+            font-style: italic;
+            z-index: 999;
+        ">
+            Credit by : RANDY36 #Version 1.0.0
+        </div>
+    `;
+
+    // Ganti body dengan tabel + watermark fixed
+    document.body.innerHTML = `
+        <div style="text-align:center; font-weight:bold; font-size:18px; margin-bottom:10px;">
+            Rincian Angsuran Bulanan
+        </div>
+        ${tableContent}
+        ${watermark}
+    `;
+
+    window.print();
+
+    // Kembalikan tampilan asli
+    document.body.innerHTML = originalContent;
+
+    // Pastikan event listener tetap aktif
+    setupListeners();
+}
+
+
+
+
+</script>
+
+
+
+<!-- Tab Askrida -->
+<div id="askrida" class="tab-content">
+    <h2 style="text-align:center;">TARIF IJP ASKRIDA</h2>
+    <div class="card table-wrap">
+        <table>
+            <thead>
+				<tr>
+				<th rowspan="5">Masa Asuransi</th>
+				<th rowspan="5">Jumlah Bulan</th>
+				<th colspan="12">PAYROLL BPD</th>
+				<th colspan="3">NON PAYROLL</th>
+				</tr>
+				</tr>
+				<th colspan="3">Pegawai PNS / CPNS / BUMN / BUMD / Kementrian RI/BNTT/PPPK (Aktif)</th>
+				<th colspan="2">MPP  dan Pensiunan  PNS / CPNS / BUMN / BUMD / Kementrian RI/BNTT </th>
+				<th colspan="2">Pegawai Tetap Swasta </th>
+				<th>Komisaris/ Direksi Bank NTT</th>
+				<th colspan="2">Tokoh Lebaga Agama (Pendeta) dibawah naunga GMIT/PGI</th>
+				<th colspan="2">Anggota Dewan</th>
+				<th rowspan="3">Pegawai PNS / CPNS / BUMN / BUMD / Kementrian RI</th>
+				<th rowspan="3">Pegawai Tetap Swasta </th>
+				<th rowspan="3">Komisaris/ Direksi </th>
+				</tr>
+				</tr>
+				<th>sd 50 Tahun</th>
+				<th>51-55 Tahun</th>
+				<th>56-59 Tahun</th>
+				<th>Maximal 60 Tahun</th>
+				<th>61-74 Tahun</th>
+				<th>sd 50 Tahun</th>
+				<th>51 sd 55 Tahun</th>
+				<th rowspan="2">sesuai masa jabatan maximal 58 Tahun, mana yang lebih dahulu</th>
+				<th>sd 50 Tahun</th>
+				<th>51 sd 55 Tahun</th>
+				<th>< 60 Thn</th>
+				<th>> 60 Thn</th>
+				</tr>
+				</tr>
+				<th  colspan="3">( X+ N) Batas Usia Pensiun (BUP) dan maximal 65 Tahun, mana yang terlebih dahulu</th>
+				<th colspan="2">75 Tahun</th>
+				<th colspan="2">65 Tahun</th>
+				<th colspan="2">60 Tahun</th>
+				<th colspan="2">Sesuai masa jabatan  maximal 65 tahun, mana yang lebih dahulu</th>
+				</tr>
+				</tr>
+				<th  colspan="10">Feebase 5%</th>
+				<th colspan="2">Feebase 0%</th>
+				<th colspan="3">Feebase 5%</th>
+				</tr>
+            </thead>
+            <tbody>
+                </tr><td>1</td><td>12</td><td>0.400</td><td>0.600</td><td>0.800</td><td>1.400</td><td>1.500</td><td>0.514</td><td>0.600</td><td>0.400</td><td>0.543</td><td>1.086</td><td>1.581</td><td>2.278</td><td>0.900</td><td>1.050</td><td>3.810</td></tr>
+                </tr><td>2</td><td>24</td><td>0.800</td><td>1.200</td><td>1.600</td><td>2.800</td><td>3.000</td><td>1.028</td><td>1.200</td><td>0.800</td><td>1.086</td><td>2.172</td><td>3.162</td><td>4.556</td><td>1.800</td><td>2.100</td><td>7.620</td></tr>
+                </tr><td>3</td><td>36</td><td>1.200</td><td>1.800</td><td>2.400</td><td>4.200</td><td>4.500</td><td>1.542</td><td>1.800</td><td>1.200</td><td>1.629</td><td>3.258</td><td>4.743</td><td>6.834</td><td>2.700</td><td>3.150</td><td>11.430</td></tr>
+                </tr><td>4</td><td>48</td><td>1.600</td><td>2.400</td><td>3.200</td><td>5.600</td><td>6.000</td><td>2.056</td><td>2.400</td><td>1.600</td><td>2.172</td><td>4.344</td><td>6.324</td><td>9.112</td><td>3.600</td><td>4.200</td><td>15.240</td></tr>
+                </tr><td>5</td><td>60</td><td>2.000</td><td>3.000</td><td>4.000</td><td>7.000</td><td>7.500</td><td>2.570</td><td>3.000</td><td>2.000</td><td>2.715</td><td>5.430</td><td>7.905</td><td>11.390</td><td>4.500</td><td>5.250</td><td>19.050</td></tr>
+                </tr><td>6</td><td>72</td><td>2.400</td><td>3.600</td><td>4.800</td><td>8.400</td><td>9.000</td><td>3.084</td><td>3.600</td><td class="shaded"></td><td>3.258</td><td>6.516</td><td class="shaded"></td><td class="shaded"></td><td>5.400</td><td>6.300</td><td class="shaded"></td></tr>
+                </tr><td>7</td><td>84</td><td>2.800</td><td>4.200</td><td>5.600</td><td>9.800</td><td>10.500</td><td>3.598</td><td>4.200</td><td class="shaded"></td><td>3.801</td><td>7.602</td><td class="shaded"></td><td class="shaded"></td><td>6.300</td><td>7.350</td><td class="shaded"></td></tr>
+                </tr><td>8</td><td>96</td><td>3.200</td><td>4.800</td><td>6.400</td><td>11.200</td><td>12.000</td><td>4.112</td><td>4.800</td><td class="shaded"></td><td>4.344</td><td>8.688</td><td class="shaded"></td><td class="shaded"></td><td>7.200</td><td>8.400</td><td class="shaded"></td></tr>
+			    </tr><td>9</td><td>108</td><td>3.600</td><td>5.400</td><td>7.200</td><td>12.600</td><td>13.500</td><td>4.626</td><td>5.400</td><td class="shaded"></td><td>4.887</td><td>9.774</td><td class="shaded"></td><td class="shaded"></td><td>8.100</td><td>9.450</td><td class="shaded"></td></tr>
+			    </tr><td>10</td><td>120</td><td>4.000</td><td>6.000</td><td>8.000</td><td>14.000</td><td>15.000</td><td>5.140</td><td>6.000</td><td class="shaded"></td><td>5.430</td><td>10.860</td><td class="shaded"></td><td class="shaded"></td><td>9.000</td><td>10.500</td><td class="shaded"></td></tr>
+			    </tr><td>11</td><td>132</td><td>4.400</td><td>6.600</td><td>8.800</td><td>15.400</td><td>16.500</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>9.900</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>12</td><td>144</td><td>4.800</td><td>7.200</td><td>9.600</td><td>16.800</td><td>18.000</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>10.800</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>13</td><td>156</td><td>5.200</td><td>7.800</td><td>10.400</td><td>18.200</td><td>19.500</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>11.700</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>14</td><td>168</td><td>5.600</td><td>8.400</td><td>11.200</td><td>19.600</td><td>21.000</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>12.600</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>15</td><td>180</td><td>6.000</td><td>9.000</td><td>12.000</td><td>21.000</td><td>22.500</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>13.500</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>16</td><td>192</td><td>6.400</td><td>9.600</td><td>12.800</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>14.400</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>17</td><td>204</td><td>6.800</td><td>10.200</td><td>13.600</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>15.300</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>18</td><td>216</td><td>7.200</td><td>10.800</td><td>14.400</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>16.200</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>19</td><td>228</td><td>7.600</td><td>11.400</td><td>15.200</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>17.100</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>20</td><td>240</td><td>8.000</td><td>12.000</td><td>16.000</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>18.000</td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>21</td><td>252</td><td>8.400</td><td>12.600</td><td>16.800</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>22</td><td>264</td><td>8.800</td><td>13.200</td><td>17.600</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>23</td><td>276</td><td>9.200</td><td>13.800</td><td>18.400</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>24</td><td>288</td><td>9.600</td><td>14.400</td><td>19.200</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td>25</td><td>300</td><td>10.000</td><td>15.000</td><td>20.000</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
+				</tr><td colspan="17">Risk Sharing 75% (Askrida) : 25% (Bank NTT)</td></tr>
+				</tr><td colspan="17">Perhitungan Tarif premi persen</td></tr>
+			</tbody>
+        </table>
+    </div>
+</div>
+
+<div class="running-text">
+  <span>
+    Simulasi ini terus dikembangkan sesuai perubahan terkini. Masukan dan saran Anda sangat berarti untuk penyempurnaan. 
+    Hubungi kreator jika ingin berbagi ide atau masukan. — Randy36
+  </span>
+</div>
+
+			
+</body>
+</html>
