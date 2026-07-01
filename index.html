@@ -3,8 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulasi KMG Version 1.0.0</title>
+<title>Simulasi KMG Version 1.1.0</title>
 <style>
+
+.askrida-container{
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+}
+
+.askrida-left,
+.askrida-middle,
+.askrida-right{
+    display:flex;
+    flex-direction:row;
+    gap:15px;
+    align-items:flex-start;
+}
+
+.excel-table{
+    border-collapse:collapse;
+    font-size:14px;
+    min-width:250px;
+}
+
+.excel-table th{
+    background:#1f4e78;
+    color:white;
+    padding:8px;
+    border:1px solid #000;
+    text-align:center;
+}
+
+.excel-table td{
+    border:1px solid #000;
+    padding:6px 8px;
+    background:#d9e7f5;
+}
+
+.excel-table input{
+    width:100%;
+    border:none;
+    background:transparent;
+    text-align:right;
+}
+
+.green-row td{
+    background:#92d050;
+    font-weight:bold;
+}
+
+.total-table td{
+    background:#8db4e2;
+    font-weight:bold;
+}
+
+@media(max-width:768px){
+
+    .askrida-container{
+        flex-direction:column;
+    }
+
+    .excel-table{
+        width:100%;
+    }
+}
 
 /* gaya untuk catatan saldo blokir */
 .blokir-note {
@@ -264,7 +328,7 @@ th, td { border:1px solid #999; padding:6px; text-align:center; }
 th { background-color:#d9eaff; font-weight:bold; }
 td.left { text-align:left; }
 .shaded { background-color:#ccc; }
-.watermark { position: fixed; bottom: 40px; right: 15px; font-size: 12px; color: rgba(0,0,0,0.4); font-style: italic; z-index:999; }
+.watermark { position: fixed; bottom: 10px; right: 15px; font-size: 12px; color: rgba(0,0,0,0.4); font-style: italic; z-index:999; }
 @media print {
   .tab-container { position: static; }
 }
@@ -304,6 +368,143 @@ td.left { text-align:left; }
   }
 }
 
+/* ===== TABEL ASURANSI ===== */
+.asuransi-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.asuransi-table th,
+.asuransi-table td {
+    border: 1px solid #dcdcdc;
+    padding: 12px;
+    text-align: center;
+}
+
+.asuransi-table th {
+    background: #f8f9fb;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.asuransi-table td.label-col {
+    text-align: left;
+    font-weight: 600;
+    background: #fafafa;
+    width: 180px;
+}
+
+.asuransi-table input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #e1d58b;
+    background: #fff8c6;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.asuransi-box {
+    background: #e6f7ff;
+    border: 1px solid #b3e5fc;
+    border-radius: 6px;
+    padding: 10px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.total-col {
+    background: #eef7e8 !important;
+}
+
+.total-text {
+    font-size: 18px;
+    color: #1565c0;
+    font-weight: bold;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+    .asuransi-table {
+        font-size: 12px;
+    }
+
+    .asuransi-table th,
+    .asuransi-table td {
+        padding: 6px;
+    }
+}
+
+/* ===== POPUP KETENTUAN ===== */
+
+.modal{
+    display:none;
+    position:fixed;
+    z-index:9999;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+}
+
+.modal-content{
+    background:#fff;
+    width:90%;
+    max-width:800px;
+    margin:50px auto;
+    padding:20px;
+    border-radius:12px;
+    max-height:80vh;
+    overflow-y:auto;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+	
+	#isiKetentuan{
+    font-size:18px;
+    line-height:1.6;
+}
+
+#isiKetentuan h2{
+    margin-bottom:25px;
+}
+
+#isiKetentuan h3{
+    margin-top:20px;
+    margin-bottom:10px;
+}
+
+#isiKetentuan ol{
+    margin-top:5px;
+}
+
+#isiKetentuan li{
+    margin-bottom:6px;
+}
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.modal-header h2{
+    margin:0;
+}
+
+.close-modal{
+    font-size:28px;
+    cursor:pointer;
+    font-weight:bold;
+    color:#e74c3c;
+}
+
+.close-modal:hover{
+    color:#c0392b;
+}
 
 </style>
 </head>
@@ -357,8 +558,8 @@ td.left { text-align:left; }
 <div class="card">
     <div class="grid"><label>Gaji</label><input type="number" id="gaji" class="yellow"></div>
     <div class="grid"><label>Penghasilan Lain</label><input type="number" id="penghasilanLain" class="yellow"></div>
-    <div class="grid"><label>Angsuran 1</label><input type="number" id="angsuran1" class="yellow"></div>
-    <div class="grid"><label>Angsuran 2</label><input type="number" id="angsuran2" class="yellow"></div>
+    <div class="grid"><label>Angsuran berjalan 1 (tidak dilunasi)</label><input type="number" id="angsuran1" class="yellow"></div>
+    <div class="grid"><label>Angsuran berjalan 2 (tidak dilunasi)</label><input type="number" id="angsuran2" class="yellow"></div>
     <div class="grid"><label>Plafon Kredit</label><input type="number" id="plafonInput" class="yellow"></div>
     <div class="grid"><label>Jangka Waktu (bulan)</label><input type="number" id="jangkaWaktu" class="yellow"></div>
     <div class="grid"><label>Bunga (%)</label><input type="number" id="bunga" class="yellow" value="12"></div>
@@ -374,9 +575,128 @@ td.left { text-align:left; }
     <div class="grid"><label>Biaya Administrasi (%)</label><input type="number" id="persenAdmin" class="yellow" step="0.01"></div>
     <div class="grid"><label>Nominal Biaya Administrasi</label><div id="nominalAdmin" class="blue"></div></div>
 
-    <div class="grid"><label>Biaya Asuransi (%)</label><input type="number" id="persenAsuransi" class="yellow" step="0.01"></div>
-    <div class="grid"><label>Nominal Biaya Asuransi</label><div id="nominalAsuransi" class="blue"></div></div>
+<table class="asuransi-table">
 
+    <tr>
+    <th></th>
+		<th>Asuransi Jamkrida</th>
+		<th>Asuransi Askrida</th>
+		<th>Asuransi Chubb Life</th>
+		<th class="total-col">Total Asuransi</th>
+	</tr>
+
+   <tr>
+    <td class="label-col">Persentase (%)</td>
+
+    <td>
+       <div>
+    <div style="margin-bottom:5px;">
+        <label>
+            <input type="radio" name="modeJamkrida"
+                   id="jamkridaAuto" checked>
+            Otomatis
+        </label>
+
+        <label style="margin-left:10px;">
+            <input type="radio" name="modeJamkrida"
+                   id="jamkridaManual">
+            Manual
+        </label>
+    </div>
+
+    <input type="number"
+           id="persenJamkrida"
+           class="yellow"
+           step="0.01"
+           readonly>
+</div>
+    </td>
+
+    <td>
+       <div>
+    <div style="margin-bottom:5px;">
+        <label>
+            <input type="radio" name="modeAskrida"
+                   id="askridaAuto" checked>
+            Otomatis
+        </label>
+
+        <label style="margin-left:10px;">
+            <input type="radio" name="modeAskrida"
+                   id="askridaManual">
+            Manual
+        </label>
+    </div>
+
+    <input type="number"
+           id="persenAskrida"
+           class="yellow"
+           step="0.01"
+           readonly>
+</div>
+    </td>
+
+    <td>
+        <div>
+    <div style="margin-bottom:5px;">
+        <label>
+            <input type="radio" name="modeChubb"
+                   id="chubbAuto" checked>
+            Otomatis
+        </label>
+
+        <label style="margin-left:10px;">
+            <input type="radio" name="modeChubb"
+                   id="chubbManual">
+            Manual
+        </label>
+    </div>
+
+    <input type="number"
+           id="persenChubb"
+           class="yellow"
+           step="0.001"
+           readonly>
+</div>
+    </td>
+
+    <td class="total-col">
+        <div id="persenTotalAsuransi"
+             class="asuransi-box">
+             0 %
+        </div>
+    </td>
+</tr>
+
+<tr>
+	<td class="label-col">Nominal Biaya</td>
+
+	<td>
+		<div id="nominalJamkrida"
+			class="asuransi-box">
+		</div>
+    </td>
+
+    <td>
+        <div id="nominalAskrida"
+             class="asuransi-box">
+        </div>
+    </td>
+
+    <td>
+        <div id="nominalChubb"
+             class="asuransi-box">
+        </div>
+    </td>
+
+    <td class="total-col">
+        <div id="totalAsuransi"
+             class="asuransi-box total-text">
+        </div>
+    </td>
+</tr>
+
+</table>
     <div class="grid">
     <label>Saldo Blokir</label>
     <div>
@@ -397,6 +717,7 @@ td.left { text-align:left; }
 </div>
 
 <div class="btn-group">
+    <button class="action" onclick="showKetentuan()">Ketentuan</button>
     <button class="action" onclick="cetakTanpaTabel()">Cetak PDF (Tanpa Tabel)</button>
     <button class="action" onclick="cetakTabel()">Cetak Tabel</button>
     <button class="action" onclick="clearData()">Clear</button>
@@ -416,11 +737,11 @@ td.left { text-align:left; }
 
 <!-- Tab IJP Jamkrida -->
 <div id="ijp" class="tab-content">
-    <h2 style="text-align:center;">TARIF IJP JAMKRIDA (FEE BASE 12.5%)</h2>
+    <h2 style="text-align:center;">TARIF IJP JAMKRIDA</h2>
     <div class="card table-wrap">
         <table>
             <thead>
-                <tr><th>Tahun</th><th>Bulan</th><th>MTG ASN &amp; P3K</th><th>SEKAWAN</th><th>PRA/PENSIUN</th><th>DPRD</th><th>DL</th></tr>
+                <tr><th>Tahun</th><th>Bulan</th><th>MULTIGUNA &amp; VERTIKAL</th><th>SEKAWAN</th><th>PRA/PENSIUN</th><th>DPRD</th><th>DL</th></tr>
             </thead>
             <tbody>
                 <tr><td>1</td><td>12</td><td>0.35%</td><td>0.12%</td><td>0.66%</td><td>0.50%</td><td>0.30%</td></tr>
@@ -441,13 +762,8 @@ td.left { text-align:left; }
                 <tr><td>16</td><td>192</td><td>3.10%</td><td>2.30%</td><td>7.90%</td><td class="shaded"></td><td class="shaded"></td></tr>
                 <tr><td>17</td><td>204</td><td>3.10%</td><td>2.30%</td><td>8.30%</td><td class="shaded"></td><td class="shaded"></td></tr>
                 <tr><td>18</td><td>216</td><td>3.10%</td><td>2.30%</td><td>8.69%</td><td class="shaded"></td><td class="shaded"></td></tr>
-                <tr><td>19</td><td>228</td><td>3.10%</td><td>2.30%</td><td>9.06%</td><td>0.00%</td><td class="shaded"></td></tr>
+                <tr><td>19</td><td>228</td><td>3.10%</td><td>2.30%</td><td>9.06%</td><td class="shaded"></td><td class="shaded"></td></tr>
                 <tr><td>20</td><td>240</td><td>3.10%</td><td>2.30%</td><td>9.42%</td><td class="shaded"></td><td class="shaded"></td></tr>
-                <tr><td>21</td><td>252</td><td>3.40%</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
-                <tr><td>22</td><td>264</td><td>3.40%</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
-                <tr><td>23</td><td>276</td><td>3.40%</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
-                <tr><td>24</td><td>288</td><td>3.40%</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
-                <tr><td>25</td><td>300</td><td>3.40%</td><td>PEN</td><td>95.00%</td><td>5.00%</td><td class="shaded"></td></tr>
             </tbody>
         </table>
     </div>
@@ -455,7 +771,7 @@ td.left { text-align:left; }
 
 <!-- Tab Askrida will be added below when file saved -->
 
-<div class="watermark">Credit by : RANDY36 #Version 1.0.0</div>
+<div class="watermark">Credit by : RANDY36 #Version 1.1.0</div>
 
 <script>
 function openTab(evt, tabName) {
@@ -578,16 +894,422 @@ if (document.getElementById("blokirOtomatis").checked) {
 
     document.getElementById("plafondMax").innerText = plafon ? formatRupiah(Math.round(plafon)) : "-";
 
-    let persenAdmin = parseFloat(document.getElementById("persenAdmin").value) || 0;
-    let persenAsuransi = parseFloat(document.getElementById("persenAsuransi").value) || 0;
-    let nominalAdmin = (plafon * persenAdmin) / 100;
-    let nominalAsuransi = (plafon * persenAsuransi) / 100;
-    document.getElementById("nominalAdmin").innerText = formatRupiah(Math.round(nominalAdmin));
-    document.getElementById("nominalAsuransi").innerText = formatRupiah(Math.round(nominalAsuransi));
+	// ===============================
+// AUTO ISI TAB ASKRIDA
+// ===============================
+
+// Tanggal Lahir
+document.getElementById("tglLahirManual").value =
+    document.getElementById("tanggalLahir").value || "";
+
+// Plafond Total
+document.getElementById("plafondManual").value =
+    plafon ? formatRupiah(Math.round(plafon)) : "";
+
+// JW Kredit
+document.getElementById("jwManual").value =
+    jangkaWaktu || "";
+
+// ===============================
+// PLAFOND CHUBB = 25% PLAFOND
+// ===============================
+
+let plafondChubb = plafon * 0.25;
+
+document.getElementById("plafondChubb").innerText =
+    formatRupiah(Math.round(plafondChubb));
+
+
+// ===============================
+// HITUNG USIA (PEMBULATAN KE BAWAH)
+// ===============================
+
+let usiaTahun = "";
+
+if (tglCekVal && tglLahirVal) {
+
+    const tanggalCair = new Date(tglCekVal);
+    const tanggalLahir = new Date(tglLahirVal);
+
+    usiaTahun =
+        tanggalCair.getFullYear() -
+        tanggalLahir.getFullYear();
+
+    // pembulatan kebawah
+    if (
+        tanggalCair.getMonth() < tanggalLahir.getMonth() ||
+        (
+            tanggalCair.getMonth() === tanggalLahir.getMonth() &&
+            tanggalCair.getDate() < tanggalLahir.getDate()
+        )
+    ) {
+        usiaTahun--;
+    }
+}
+
+document.getElementById("usiaAskrida").innerText =
+    usiaTahun !== "" ? usiaTahun + " Tahun" : "";
+
+// ===============================
+// RATE ASKRIDA BERDASARKAN JW
+// ===============================
+
+let rateAskrida = 0;
+
+// tabel rate askrida
+const tabelAskrida = [
+    { bulan: 12, rate: 0.35 },
+    { bulan: 24, rate: 0.70 },
+    { bulan: 36, rate: 1.06 },
+    { bulan: 48, rate: 1.78 },
+    { bulan: 60, rate: 1.78 },
+    { bulan: 72, rate: 2.45 },
+    { bulan: 84, rate: 2.55 },
+    { bulan: 96, rate: 2.65 },
+    { bulan: 108, rate: 2.65 },
+    { bulan: 120, rate: 2.65 },
+    { bulan: 132, rate: 2.90 },
+    { bulan: 144, rate: 2.90 },
+    { bulan: 156, rate: 2.90 },
+    { bulan: 168, rate: 2.90 },
+    { bulan: 180, rate: 2.90 },
+    { bulan: 192, rate: 4.724 },
+    { bulan: 204, rate: 5.071 },
+    { bulan: 216, rate: 5.427 },
+    { bulan: 228, rate: 5.775 },
+    { bulan: 240, rate: 6.106 },
+    { bulan: 252, rate: 6.431 },
+    { bulan: 264, rate: 6.802 },
+    { bulan: 276, rate: 7.181 },
+    { bulan: 288, rate: 7.553 },
+    { bulan: 300, rate: 7.908 }
+];
+
+// ===============================
+// RATE CHUBB BERDASARKAN USIA
+// ===============================
+
+let rateChubb = "";
+
+// tabel rate chubb
+const tabelChubb = [
+    { usia: 17, rate: 0.240 },
+    { usia: 18, rate: 0.240 },
+    { usia: 19, rate: 0.240 },
+    { usia: 20, rate: 0.240 },
+    { usia: 21, rate: 0.240 },
+    { usia: 22, rate: 0.240 },
+    { usia: 23, rate: 0.240 },
+    { usia: 24, rate: 0.240 },
+    { usia: 25, rate: 0.240 },
+    { usia: 26, rate: 0.240 },
+    { usia: 27, rate: 0.240 },
+    { usia: 28, rate: 0.240 },
+    { usia: 29, rate: 0.240 },
+    { usia: 30, rate: 0.240 },
+    { usia: 31, rate: 0.240 },
+    { usia: 32, rate: 0.240 },
+    { usia: 33, rate: 0.240 },
+    { usia: 34, rate: 0.240 },
+    { usia: 35, rate: 0.240 },
+    { usia: 36, rate: 0.240 },
+    { usia: 37, rate: 0.240 },
+    { usia: 38, rate: 0.240 },
+    { usia: 39, rate: 0.240 },
+    { usia: 40, rate: 0.440 },
+    { usia: 41, rate: 0.440 },
+    { usia: 42, rate: 0.440 },
+    { usia: 43, rate: 0.440 },
+    { usia: 44, rate: 0.440 },
+    { usia: 45, rate: 0.440 },
+    { usia: 46, rate: 0.530 },
+    { usia: 47, rate: 0.530 },
+    { usia: 48, rate: 0.530 },
+    { usia: 49, rate: 0.530 },
+    { usia: 50, rate: 0.530 },
+    { usia: 51, rate: 1.265 },
+    { usia: 52, rate: 1.265 },
+    { usia: 53, rate: 1.265 },
+    { usia: 54, rate: 1.265 },
+    { usia: 55, rate: 1.265 },
+    { usia: 56, rate: 1.773 },
+    { usia: 57, rate: 1.773 },
+    { usia: 58, rate: 1.773 },
+    { usia: 59, rate: 1.773 },
+    { usia: 60, rate: 1.773 },
+    { usia: 61, rate: 2.313 },
+    { usia: 62, rate: 2.313 },
+    { usia: 63, rate: 2.313 },
+    { usia: 64, rate: 2.313 },
+    { usia: 65, rate: 2.313 },
+    { usia: 66, rate: 3.409 },
+    { usia: 67, rate: 3.409 },
+    { usia: 68, rate: 3.409 },
+    { usia: 69, rate: 3.409 },
+    { usia: 70, rate: 3.900 },
+    { usia: 71, rate: 3.900 },
+    { usia: 72, rate: 3.900 },
+    { usia: 73, rate: 3.900 },
+    { usia: 74, rate: 3.900 },
+    { usia: 75, rate: 3.900 }
+];
+
+// cari rate berdasarkan usia
+const hasilRateChubb = tabelChubb.find(
+    item => item.usia === usiaTahun
+);
+
+if (hasilRateChubb) {
+    rateChubb = hasilRateChubb.rate;
+}
+
+// tampilkan hasil
+document.getElementById("rateChubb").innerText =
+    rateChubb !== ""
+        ? rateChubb.toFixed(3) + "%"
+        : "";
+
+// =========================
+// AUTO RATE JAMKRIDA
+// =========================
+
+const tabelJamkrida = [
+ {bulan:12,rate:0.35},
+ {bulan:24,rate:0.70},
+ {bulan:36,rate:1.06},
+ {bulan:48,rate:1.42},
+ {bulan:60,rate:1.78},
+ {bulan:72,rate:2.15},
+ {bulan:84,rate:2.15},
+ {bulan:96,rate:2.15},
+ {bulan:108,rate:2.65},
+ {bulan:120,rate:2.65},
+ {bulan:132,rate:2.65},
+ {bulan:144,rate:2.65},
+ {bulan:156,rate:2.90},
+ {bulan:168,rate:2.90},
+ {bulan:180,rate:2.90},
+ {bulan:192,rate:3.10},
+ {bulan:204,rate:3.10},
+ {bulan:216,rate:3.10},
+ {bulan:228,rate:3.10},
+ {bulan:240,rate:3.10}
+];
+
+let rateJamkrida = 0;
+
+for(let item of tabelJamkrida){
+    if(jangkaWaktu <= item.bulan){
+        rateJamkrida = item.rate;
+        break;
+    }
+}
+
+if(document.getElementById("jamkridaAuto").checked){
+    document.getElementById("persenJamkrida").value =
+        rateJamkrida.toFixed(2);
+
+    document.getElementById("persenJamkrida").readOnly = true;
+}else{
+    document.getElementById("persenJamkrida").readOnly = false;
+}
+
+// AUTO CHUBB
+if(document.getElementById("chubbAuto").checked){
+    document.getElementById("persenChubb").value =
+        rateChubb;
+
+    document.getElementById("persenChubb").readOnly = true;
+}else{
+    document.getElementById("persenChubb").readOnly = false;
+}
+
+// cari rate berdasarkan jangka waktu
+for (let i = 0; i < tabelAskrida.length; i++) {
+
+    if (jangkaWaktu <= tabelAskrida[i].bulan) {
+
+        rateAskrida = tabelAskrida[i].rate;
+        break;
+    }
+}
+
+// AUTO ASKRIDA
+if(document.getElementById("askridaAuto").checked){
+    document.getElementById("persenAskrida").value =
+        rateAskrida.toFixed(3);
+ 
+	document.getElementById("persenAskrida").readOnly = true;
+}else{
+    document.getElementById("persenAskrida").readOnly = false;
+}
+
+
+// tampilkan hasil
+document.getElementById("rateAskrida").innerText =
+    rateAskrida > 0
+        ? rateAskrida.toFixed(3) + "%"
+        : "";
+// ===============================
+// PREMI ASKRIDA
+// ===============================
+
+let totalPremiAskrida =
+    plafon * rateAskrida / 100;
+
+let feeBaseAskrida =
+    totalPremiAskrida * 0.05;
+
+let nettoPremiAskrida =
+    totalPremiAskrida - feeBaseAskrida;
+
+document.getElementById("premiAskrida").innerText =
+    formatRupiah(Math.round(totalPremiAskrida));
+
+document.getElementById("feeBaseAskrida").innerText =
+    formatRupiah(Math.round(feeBaseAskrida));
+
+document.getElementById("nettoPremiAskrida").innerText =
+    formatRupiah(Math.round(nettoPremiAskrida));
+
+// ===============================
+// PREMI CHUBB
+// Rumus:
+// Total Premi = (Plafon x 25%) x Rate Chubb x JW
+// Fee Base = Total Premi x 5%
+// PPh23 = Fee Base x 2%
+// Netto Fee Base = Fee Base - PPh23
+// Netto Premi = Total Premi x 95%
+// ===============================
+
+// JW dalam tahun (pembulatan ke atas)
+let jwTahunChubb =
+    Math.max(1, Math.ceil(jangkaWaktu / 12));
+
+let totalPremiChubb =
+    (plafon * 0.25) *
+    (rateChubb / 100) *
+    jwTahunChubb;
+
+let feeBaseChubb =
+    totalPremiChubb * 0.05;
+
+let nettoPremiChubb =
+    totalPremiChubb - feeBaseChubb;
+
+
+// tampilkan hasil
+document.getElementById("premiChubb").innerText =
+    formatRupiah(Math.round(totalPremiChubb));
+
+document.getElementById("feeBaseChubb").innerText =
+    formatRupiah(Math.round(feeBaseChubb));
+
+document.getElementById("nettoPremiChubb").innerText =
+    formatRupiah(Math.round(nettoPremiChubb));
+
+
+// ===============================
+// TOTAL BRUTO
+// ===============================
+
+// ===============================
+// TOTAL PREMI
+// ===============================
+
+let totalPremiBruto =
+    totalPremiAskrida +
+    totalPremiChubb;
+
+let totalFeeBase =
+    feeBaseAskrida +
+    feeBaseChubb;
+
+let totalPremiNetto =
+    nettoPremiAskrida +
+    nettoPremiChubb;
+
+document.getElementById("totalPremiBruto").innerText =
+    formatRupiah(Math.round(totalPremiBruto));
+
+document.getElementById("totalFeeBase").innerText =
+    formatRupiah(Math.round(totalFeeBase));
+
+document.getElementById("totalPremiNetto").innerText =
+    formatRupiah(Math.round(totalPremiNetto));
+
+// BIAYA ADMINISTRASI
+let persenAdmin = parseFloat(document.getElementById("persenAdmin").value) || 0;
+let nominalAdmin = (plafon * persenAdmin) / 100;
+
+document.getElementById("nominalAdmin").innerText =
+    formatRupiah(Math.round(nominalAdmin));
+
+
+// ASURANSI JAMKRIDA
+let persenJamkrida =
+    parseFloat(document.getElementById("persenJamkrida").value) || 0;
+
+let nominalJamkrida =
+    (plafon * persenJamkrida) / 100;
+
+document.getElementById("nominalJamkrida").innerText =
+    formatRupiah(Math.round(nominalJamkrida));
+
+
+// ASURANSI ASKRIDA
+let persenAskrida =
+    parseFloat(document.getElementById("persenAskrida").value) || 0;
+
+let nominalAskrida =
+    (plafon * persenAskrida) / 100;
+	
+document.getElementById("nominalAskrida").innerText =
+    formatRupiah(Math.round(nominalAskrida));
+	
+// ASURANSI CHUBB LIFE
+let persenChubb =
+    parseFloat(document.getElementById("persenChubb").value) || 0;
+
+// JW dalam tahun (minimal 1 tahun)
+let jwTahun =
+    Math.max(1, Math.ceil(jangkaWaktu / 12));
+
+let nominalChubb =
+    (plafon * 0.25) *
+    (persenChubb / 100) *
+    jwTahun;
+
+document.getElementById("nominalChubb").innerText =
+    formatRupiah(Math.round(nominalChubb));
+
+// TOTAL PERSENTASE ASURANSI
+let totalPersenAsuransi =
+    persenJamkrida +
+    persenAskrida +
+    persenChubb;
+
+document.getElementById("persenTotalAsuransi").innerText =
+    totalPersenAsuransi.toFixed(2) + " %";
+
+// TOTAL ASURANSI
+let totalAsuransi =
+    nominalJamkrida +
+    nominalAskrida +
+    nominalChubb;
+
+document.getElementById("totalAsuransi").innerText =
+    formatRupiah(Math.round(totalAsuransi));
 
     let pelunasan1 = parseFloat(document.getElementById("pelunasan1").value) || 0;
     let pelunasan2 = parseFloat(document.getElementById("pelunasan2").value) || 0;
-    let sisaNasabah = plafon - nominalAdmin - nominalAsuransi - saldoBlokir - pelunasan1 - pelunasan2;
+ let sisaNasabah =
+    plafon
+    - nominalAdmin
+    - totalAsuransi
+    - saldoBlokir
+    - pelunasan1
+    - pelunasan2;
     document.getElementById("sisaNasabah").innerText = isFinite(sisaNasabah) ? formatRupiah(Math.round(sisaNasabah)) : "-";
 
     if (persentase > 70 || totalAngsuran > gaji) {
@@ -649,7 +1371,10 @@ function clearData() {
     document.getElementById("sisaGaji").innerText = "";
     document.getElementById("plafondMax").innerText = "";
     document.getElementById("nominalAdmin").innerText = "";
-    document.getElementById("nominalAsuransi").innerText = "";
+    document.getElementById("nominalJamkrida").innerText = "";
+	document.getElementById("nominalAskrida").innerText = "";
+	document.getElementById("nominalChubb").innerText = "";
+	document.getElementById("totalAsuransi").innerText = "";
     document.getElementById("sisaNasabah").innerText = "";
     document.getElementById("peringatan").style.display = "none";
     document.querySelector("#tabelAngsuran tbody").innerHTML = "";
@@ -716,7 +1441,7 @@ function cetakTabel() {
             font-style: italic;
             z-index: 999;
         ">
-            Credit by : RANDY36 #Version 1.0.0
+            Credit by : RANDY36 #Version 1.1.0
         </div>
     `;
 
@@ -738,7 +1463,21 @@ function cetakTabel() {
     setupListeners();
 }
 
+function showKetentuan(){
+    document.getElementById("modalKetentuan").style.display = "block";
+}
 
+function closeKetentuan(){
+    document.getElementById("modalKetentuan").style.display = "none";
+}
+
+window.addEventListener("click", function(e){
+    const modal = document.getElementById("modalKetentuan");
+
+    if(e.target === modal){
+        modal.style.display = "none";
+    }
+});
 
 
 </script>
@@ -747,91 +1486,324 @@ function cetakTabel() {
 
 <!-- Tab Askrida -->
 <div id="askrida" class="tab-content">
-    <h2 style="text-align:center;">TARIF IJP ASKRIDA</h2>
+    <h2 style="text-align:center;">TARIF IJP ASKRIDA & CHUBB LIFE</h2>
     <div class="card table-wrap">
-        <table>
-            <thead>
-				<tr>
-				<th rowspan="5">Masa Asuransi</th>
-				<th rowspan="5">Jumlah Bulan</th>
-				<th colspan="12">PAYROLL BPD</th>
-				<th colspan="3">NON PAYROLL</th>
-				</tr>
-				</tr>
-				<th colspan="3">Pegawai PNS / CPNS / BUMN / BUMD / Kementrian RI/BNTT/PPPK (Aktif)</th>
-				<th colspan="2">MPP  dan Pensiunan  PNS / CPNS / BUMN / BUMD / Kementrian RI/BNTT </th>
-				<th colspan="2">Pegawai Tetap Swasta </th>
-				<th>Komisaris/ Direksi Bank NTT</th>
-				<th colspan="2">Tokoh Lebaga Agama (Pendeta) dibawah naunga GMIT/PGI</th>
-				<th colspan="2">Anggota Dewan</th>
-				<th rowspan="3">Pegawai PNS / CPNS / BUMN / BUMD / Kementrian RI</th>
-				<th rowspan="3">Pegawai Tetap Swasta </th>
-				<th rowspan="3">Komisaris/ Direksi </th>
-				</tr>
-				</tr>
-				<th>sd 50 Tahun</th>
-				<th>51-55 Tahun</th>
-				<th>56-59 Tahun</th>
-				<th>Maximal 60 Tahun</th>
-				<th>61-74 Tahun</th>
-				<th>sd 50 Tahun</th>
-				<th>51 sd 55 Tahun</th>
-				<th rowspan="2">sesuai masa jabatan maximal 58 Tahun, mana yang lebih dahulu</th>
-				<th>sd 50 Tahun</th>
-				<th>51 sd 55 Tahun</th>
-				<th>< 60 Thn</th>
-				<th>> 60 Thn</th>
-				</tr>
-				</tr>
-				<th  colspan="3">( X+ N) Batas Usia Pensiun (BUP) dan maximal 65 Tahun, mana yang terlebih dahulu</th>
-				<th colspan="2">75 Tahun</th>
-				<th colspan="2">65 Tahun</th>
-				<th colspan="2">60 Tahun</th>
-				<th colspan="2">Sesuai masa jabatan  maximal 65 tahun, mana yang lebih dahulu</th>
-				</tr>
-				</tr>
-				<th  colspan="10">Feebase 5%</th>
-				<th colspan="2">Feebase 0%</th>
-				<th colspan="3">Feebase 5%</th>
-				</tr>
-            </thead>
-            <tbody>
-                </tr><td>1</td><td>12</td><td>0.400</td><td>0.600</td><td>0.800</td><td>1.400</td><td>1.500</td><td>0.514</td><td>0.600</td><td>0.400</td><td>0.543</td><td>1.086</td><td>1.581</td><td>2.278</td><td>0.900</td><td>1.050</td><td>3.810</td></tr>
-                </tr><td>2</td><td>24</td><td>0.800</td><td>1.200</td><td>1.600</td><td>2.800</td><td>3.000</td><td>1.028</td><td>1.200</td><td>0.800</td><td>1.086</td><td>2.172</td><td>3.162</td><td>4.556</td><td>1.800</td><td>2.100</td><td>7.620</td></tr>
-                </tr><td>3</td><td>36</td><td>1.200</td><td>1.800</td><td>2.400</td><td>4.200</td><td>4.500</td><td>1.542</td><td>1.800</td><td>1.200</td><td>1.629</td><td>3.258</td><td>4.743</td><td>6.834</td><td>2.700</td><td>3.150</td><td>11.430</td></tr>
-                </tr><td>4</td><td>48</td><td>1.600</td><td>2.400</td><td>3.200</td><td>5.600</td><td>6.000</td><td>2.056</td><td>2.400</td><td>1.600</td><td>2.172</td><td>4.344</td><td>6.324</td><td>9.112</td><td>3.600</td><td>4.200</td><td>15.240</td></tr>
-                </tr><td>5</td><td>60</td><td>2.000</td><td>3.000</td><td>4.000</td><td>7.000</td><td>7.500</td><td>2.570</td><td>3.000</td><td>2.000</td><td>2.715</td><td>5.430</td><td>7.905</td><td>11.390</td><td>4.500</td><td>5.250</td><td>19.050</td></tr>
-                </tr><td>6</td><td>72</td><td>2.400</td><td>3.600</td><td>4.800</td><td>8.400</td><td>9.000</td><td>3.084</td><td>3.600</td><td class="shaded"></td><td>3.258</td><td>6.516</td><td class="shaded"></td><td class="shaded"></td><td>5.400</td><td>6.300</td><td class="shaded"></td></tr>
-                </tr><td>7</td><td>84</td><td>2.800</td><td>4.200</td><td>5.600</td><td>9.800</td><td>10.500</td><td>3.598</td><td>4.200</td><td class="shaded"></td><td>3.801</td><td>7.602</td><td class="shaded"></td><td class="shaded"></td><td>6.300</td><td>7.350</td><td class="shaded"></td></tr>
-                </tr><td>8</td><td>96</td><td>3.200</td><td>4.800</td><td>6.400</td><td>11.200</td><td>12.000</td><td>4.112</td><td>4.800</td><td class="shaded"></td><td>4.344</td><td>8.688</td><td class="shaded"></td><td class="shaded"></td><td>7.200</td><td>8.400</td><td class="shaded"></td></tr>
-			    </tr><td>9</td><td>108</td><td>3.600</td><td>5.400</td><td>7.200</td><td>12.600</td><td>13.500</td><td>4.626</td><td>5.400</td><td class="shaded"></td><td>4.887</td><td>9.774</td><td class="shaded"></td><td class="shaded"></td><td>8.100</td><td>9.450</td><td class="shaded"></td></tr>
-			    </tr><td>10</td><td>120</td><td>4.000</td><td>6.000</td><td>8.000</td><td>14.000</td><td>15.000</td><td>5.140</td><td>6.000</td><td class="shaded"></td><td>5.430</td><td>10.860</td><td class="shaded"></td><td class="shaded"></td><td>9.000</td><td>10.500</td><td class="shaded"></td></tr>
-			    </tr><td>11</td><td>132</td><td>4.400</td><td>6.600</td><td>8.800</td><td>15.400</td><td>16.500</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>9.900</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>12</td><td>144</td><td>4.800</td><td>7.200</td><td>9.600</td><td>16.800</td><td>18.000</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>10.800</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>13</td><td>156</td><td>5.200</td><td>7.800</td><td>10.400</td><td>18.200</td><td>19.500</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>11.700</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>14</td><td>168</td><td>5.600</td><td>8.400</td><td>11.200</td><td>19.600</td><td>21.000</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>12.600</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>15</td><td>180</td><td>6.000</td><td>9.000</td><td>12.000</td><td>21.000</td><td>22.500</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>13.500</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>16</td><td>192</td><td>6.400</td><td>9.600</td><td>12.800</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>14.400</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>17</td><td>204</td><td>6.800</td><td>10.200</td><td>13.600</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>15.300</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>18</td><td>216</td><td>7.200</td><td>10.800</td><td>14.400</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>16.200</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>19</td><td>228</td><td>7.600</td><td>11.400</td><td>15.200</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>17.100</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>20</td><td>240</td><td>8.000</td><td>12.000</td><td>16.000</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td>18.000</td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>21</td><td>252</td><td>8.400</td><td>12.600</td><td>16.800</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>22</td><td>264</td><td>8.800</td><td>13.200</td><td>17.600</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>23</td><td>276</td><td>9.200</td><td>13.800</td><td>18.400</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>24</td><td>288</td><td>9.600</td><td>14.400</td><td>19.200</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td>25</td><td>300</td><td>10.000</td><td>15.000</td><td>20.000</td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td><td class="shaded"></td></tr>
-				</tr><td colspan="17">Risk Sharing 75% (Askrida) : 25% (Bank NTT)</td></tr>
-				</tr><td colspan="17">Perhitungan Tarif premi persen</td></tr>
-			</tbody>
+        <div class="askrida-container">
+
+    <!-- KOLOM KIRI -->
+    <div class="askrida-left">
+
+        <table class="excel-table">
+            <tr>
+                <th colspan="2">Data</th>
+            </tr>
+            <tr>
+                <td>Tanggal Lahir (yyyy/mm/dd)</td>
+                <td><input type="text" id="tglLahirManual" readonly></td>
+            </tr>
+            <tr>
+                <td>Plafond Total</td>
+                <td><input type="text" id="plafondManual" readonly></td>
+            </tr>
+            <tr>
+                <td>JW Kredit (bulan)</td>
+                <td><input type="number" id="jwManual" readonly></td>
+            </tr>
         </table>
+
+        <br>
+
+        <table class="excel-table">
+            <tr>
+                <th colspan="2">otomatis terisi</th>
+            </tr>
+            <tr>
+                <td>plafond chubb</td>
+                <td id="plafondChubb"></td>
+            </tr>
+            <tr>
+                <td>Usia</td>
+                <td id="usiaAskrida"></td>
+            </tr>
+            <tr>
+                <td>Rate Askrida</td>
+                <td id="rateAskrida"></td>
+            </tr>
+            <tr>
+                <td>Rate Chubb</td>
+                <td id="rateChubb"></td>
+            </tr>
+        </table>
+
+    </div>
+
+    <!-- KOLOM TENGAH -->
+    <div class="askrida-middle">
+
+        <table class="excel-table premium-table">
+            <tr>
+                <th colspan="2">PREMI ASKRIDA</th>
+            </tr>
+ <tr>
+    <td>Total Premi Bruto</td>
+    <td id="premiAskrida"></td>
+</tr>
+
+<tr>
+    <td>Fee Base</td>
+    <td id="feeBaseAskrida"></td>
+</tr>
+
+<tr class="green-row">
+    <td>Total Premi Netto</td>
+    <td id="nettoPremiAskrida"></td>
+</tr>
+        </table>
+
+        <br>
+
+        <table class="excel-table premium-table">
+            <tr>
+                <th colspan="2">PREMI CHUBB</th>
+            </tr>
+            <tr>
+    <td>Total Premi Bruto</td>
+    <td id="premiChubb"></td>
+</tr>
+
+<tr>
+    <td>Fee Base</td>
+    <td id="feeBaseChubb"></td>
+</tr>
+
+<tr class="green-row">
+    <td>Total Premi Netto</td>
+    <td id="nettoPremiChubb"></td>
+</tr>
+        </table>
+
+        <br>
+
+<table class="excel-table total-table">
+    <tr>
+        <td>TOTAL PREMI BRUTO</td>
+        <td id="totalPremiBruto"></td>
+    </tr>
+
+    <tr>
+        <td>TOTAL FEE BASE</td>
+        <td id="totalFeeBase"></td>
+    </tr>
+
+    <tr class="green-row">
+        <td>TOTAL PREMI NETTO</td>
+        <td id="totalPremiNetto"></td>
+    </tr>
+</table>
+
+    </div>
+
+    <!-- KOLOM KANAN -->
+    <div class="askrida-right">
+
+        <table class="excel-table">
+            <tr>
+                <th colspan="2">CHUBB</th>
+            </tr>
+            <tr>
+                <th>usia</th>
+                <th>rate</th>
+            </tr>
+
+            <tr><td>17</td><td>0.240%</td></tr>
+            <tr><td>18</td><td>0.240%</td></tr>
+            <tr><td>19</td><td>0.240%</td></tr>
+            <tr><td>20</td><td>0.240%</td></tr>
+            <tr><td>21</td><td>0.240%</td></tr>
+            <tr><td>22</td><td>0.240%</td></tr>
+            <tr><td>23</td><td>0.240%</td></tr>
+            <tr><td>24</td><td>0.240%</td></tr>
+            <tr><td>25</td><td>0.240%</td></tr>
+            <tr><td>26</td><td>0.240%</td></tr>
+			<tr><td>27</td><td>0.240%</td></tr>
+			<tr><td>28</td><td>0.240%</td></tr>
+			<tr><td>29</td><td>0.240%</td></tr>
+			<tr><td>30</td><td>0.240%</td></tr>
+			<tr><td>31</td><td>0.240%</td></tr>
+			<tr><td>32</td><td>0.240%</td></tr>
+			<tr><td>33</td><td>0.240%</td></tr>
+			<tr><td>34</td><td>0.240%</td></tr>
+			<tr><td>35</td><td>0.240%</td></tr>
+			<tr><td>36</td><td>0.240%</td></tr>
+			<tr><td>37</td><td>0.240%</td></tr>
+			<tr><td>38</td><td>0.240%</td></tr>
+			<tr><td>39</td><td>0.240%</td></tr>
+			<tr><td>40</td><td>0.440%</td></tr>
+			<tr><td>41</td><td>0.440%</td></tr>
+			<tr><td>42</td><td>0.440%</td></tr>
+			<tr><td>43</td><td>0.440%</td></tr>
+			<tr><td>44</td><td>0.440%</td></tr>
+			<tr><td>45</td><td>0.440%</td></tr>
+			<tr><td>46</td><td>0.530%</td></tr>
+			<tr><td>47</td><td>0.530%</td></tr>
+			<tr><td>48</td><td>0.530%</td></tr>
+			<tr><td>49</td><td>0.530%</td></tr>
+			<tr><td>50</td><td>0.530%</td></tr>
+			<tr><td>51</td><td>1.265%</td></tr>
+			<tr><td>52</td><td>1.265%</td></tr>
+			<tr><td>53</td><td>1.265%</td></tr>
+			<tr><td>54</td><td>1.265%</td></tr>
+			<tr><td>55</td><td>1.265%</td></tr>
+			<tr><td>56</td><td>1.773%</td></tr>
+			<tr><td>57</td><td>1.773%</td></tr>
+			<tr><td>58</td><td>1.773%</td></tr>
+			<tr><td>59</td><td>1.773%</td></tr>
+			<tr><td>60</td><td>1.773%</td></tr>
+			<tr><td>61</td><td>2.313%</td></tr>
+			<tr><td>62</td><td>2.313%</td></tr>
+			<tr><td>63</td><td>2.313%</td></tr>
+			<tr><td>64</td><td>2.313%</td></tr>
+			<tr><td>65</td><td>2.313%</td></tr>
+			<tr><td>66</td><td>3.409%</td></tr>
+			<tr><td>67</td><td>3.409%</td></tr>
+			<tr><td>68</td><td>3.409%</td></tr>
+			<tr><td>69</td><td>3.409%</td></tr>
+			<tr><td>70</td><td>3.900%</td></tr>
+			<tr><td>71</td><td>3.900%</td></tr>
+			<tr><td>72</td><td>3.900%</td></tr>
+			<tr><td>73</td><td>3.900%</td></tr>
+			<tr><td>74</td><td>3.900%</td></tr>
+			<tr><td>75</td><td>3.900%</td></tr>
+        </table>
+<br>
+
+<table class="excel-table">
+    <tr>
+        <th colspan="3">Askrida</th>
+    </tr>
+
+    <tr>
+        <th>jw (tahun)</th>
+        <th>jw (bulan)</th>
+        <th>rate</th>
+    </tr>
+
+    <tr><td>1</td><td>12</td><td>0.35%</td></tr>
+    <tr><td>2</td><td>24</td><td>0.70%</td></tr>
+    <tr><td>3</td><td>36</td><td>1.06%</td></tr>
+    <tr><td>4</td><td>48</td><td>1.78%</td></tr>
+    <tr><td>5</td><td>60</td><td>1.78%</td></tr>
+    <tr><td>6</td><td>72</td><td>2.45%</td></tr>
+    <tr><td>7</td><td>84</td><td>2.55%</td></tr>
+    <tr><td>8</td><td>96</td><td>2.65%</td></tr>
+    <tr><td>9</td><td>108</td><td>2.65%</td></tr>
+    <tr><td>10</td><td>120</td><td>2.65%</td></tr>
+    <tr><td>11</td><td>132</td><td>2.90%</td></tr>
+    <tr><td>12</td><td>144</td><td>2.90%</td></tr>
+    <tr><td>13</td><td>156</td><td>2.90%</td></tr>
+    <tr><td>14</td><td>168</td><td>2.90%</td></tr>
+    <tr><td>15</td><td>180</td><td>2.90%</td></tr>
+    <tr><td>16</td><td>192</td><td>4.724%</td></tr>
+    <tr><td>17</td><td>204</td><td>5.071%</td></tr>
+    <tr><td>18</td><td>216</td><td>5.427%</td></tr>
+    <tr><td>19</td><td>228</td><td>5.775%</td></tr>
+    <tr><td>20</td><td>240</td><td>6.106%</td></tr>
+    <tr><td>21</td><td>252</td><td>6.431%</td></tr>
+	<tr><td>22</td><td>264</td><td>6.802%</td></tr>
+	<tr><td>23</td><td>276</td><td>7.181%</td></tr>
+	<tr><td>24</td><td>288</td><td>7.553%</td></tr>
+	<tr><td>25</td><td>300</td><td>7.908%</td></tr>
+</table>
+
+</div>
+    </div>
+
+</div>
     </div>
 </div>
+
+<!-- POPUP KETENTUAN -->
+<div id="modalKetentuan" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2></h2>
+			<span class="close-modal" onclick="closeKetentuan()">&times;</span>
+        </div>
+
+        <div id="isiKetentuan">
+
+<h2 style="text-align:center;">
+    KETENTUAN KREDIT MULTIGUNA
+</h2>
+
+<h3><u>BUNGA</u></h3>
+
+<ol>
+    <li>
+        Debitur baru atau Rekening Baru diberikan suku bunga kredit
+        11,50 % efektif p.a
+    </li>
+
+    <li>
+        Debitur Eksisting Top Up diberikan dengan Syarat :
+
+        <ol type="a">
+            <li>
+                Suku bunga lama di atas 14 % efektif p.a diberikan
+                suku bunga kredit 13 % efektif p.a tanpa minimal kenaikan;
+            </li>
+
+            <li>
+                Suku bunga lama diatas 12 % efektif p.a s/d
+                14 % efektif p.a diberikan suku bunga kredit
+                12,50 % efektif p.a tanpa minimal kenaikan;
+            </li>
+
+            <li>
+                Suku bunga lama s/d 12 % efektif p.a diberikan
+                suku bunga kredit 12 % efektif p.a tanpa minimal kenaikan;
+            </li>
+
+            <li>
+                Suku bunga lama 8,75 % flat p.a diberikan
+                suku bunga kredit 12,50 % efektif p.a tanpa minimal kenaikan;
+            </li>
+
+            <li>
+                Suku bunga lama 7 % flat p.a diberikan
+                suku bunga kredit 12,50 % efektif p.a tanpa minimal kenaikan.
+            </li>
+        </ol>
+    </li>
+</ol>
+
+<br>
+
+<h3><u>BIAYA ADMINISTRASI/PROVISI</u></h3>
+
+<ol>
+    <li>
+        Terhadap Biaya Provisi untuk Debitur Top Up dikenakan 0,5 %.
+    </li>
+
+    <li>
+        Terhadap Biaya Provisi untuk Debitur Baru dikenakan 1 %.
+    </li>
+</ol>
+
+</div>
+
+    </div>
+
+</div>
+
 
 <div class="running-text">
   <span>
     Simulasi ini terus dikembangkan sesuai perubahan terkini. Masukan dan saran Anda sangat berarti untuk penyempurnaan. 
-    Hubungi kreator jika ingin berbagi ide atau masukan. — Randy36
+    Hubungi kreator jika ingin berbagi ide atau masukan. — Randy36 - Version 1.1.0
   </span>
 </div>
 
