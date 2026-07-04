@@ -506,6 +506,394 @@ td.left { text-align:left; }
     color:#c0392b;
 }
 
+/* =======================================================
+   PREVIEW CETAK BARU
+======================================================= */
+
+.preview-page{
+
+    width:190mm;
+
+    min-height:auto;
+
+    margin:8px auto;
+
+    background:#ffffff;
+
+    padding:8mm;
+
+    box-sizing:border-box;
+
+    font-family:Segoe UI,Tahoma,sans-serif;
+
+    color:#222;
+
+}
+
+.preview-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:14px;
+
+    align-items:start;
+
+}
+
+.preview-col{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+.preview-table{
+
+    margin-bottom:0;
+
+}
+
+.preview-page{
+
+    width:190mm;
+
+    min-height:auto;
+
+    margin:8px auto;
+
+    background:#ffffff;
+
+    padding:8mm;
+
+    box-sizing:border-box;
+
+    font-family:Segoe UI,Tahoma,sans-serif;
+
+    color:#222;
+
+}
+
+.preview-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:14px;
+
+    align-items:start;
+
+}
+
+.preview-col{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+.preview-table{
+
+    margin-bottom:0;
+
+}
+
+.preview-title{
+
+    text-align:center;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+    color:#0d47a1;
+
+    margin-bottom:25px;
+
+    border-bottom:3px solid #0d47a1;
+
+    padding-bottom:12px;
+
+}
+
+.preview-info{
+
+    margin:10px 0 18px;
+
+    font-size:14px;
+
+    color:#333;
+
+    line-height:1.8;
+
+}
+
+.preview-info strong{
+
+    display:inline-block;
+
+    width:120px;
+
+}
+
+.preview-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    font-size:14px;
+
+    margin-bottom:20px;
+
+}
+
+.preview-table td{
+
+    border:1px solid #777;
+
+    padding:4px 8px;
+
+    font-size:12px;
+
+    line-height:1.2;
+
+}
+
+.preview-table td:first-child{
+
+    width:42%;
+
+    font-weight:600;
+
+    background:#fafafa;
+
+}
+
+.preview-table td:last-child{
+
+    width:58%;
+
+    text-align:left;
+
+    font-weight:500;
+
+}
+
+.preview-table tr.section td{
+
+    background:#1565c0;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    text-align:center;
+
+    padding:9px;
+
+}
+
+.preview-result{
+
+    margin-top:20px;
+
+    border:3px solid #1565c0;
+
+    border-radius:8px;
+
+    overflow:hidden;
+
+}
+
+.preview-result-title{
+
+    background:#1565c0;
+
+    color:white;
+
+    text-align:center;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    padding:10px;
+
+}
+
+.preview-result-value{
+
+    text-align:center;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:#c62828;
+
+    padding:10px;
+
+}
+
+.preview-warning{
+
+    margin-top:18px;
+
+    background:#fff3cd;
+
+    color:#b71c1c;
+
+    border:1px solid #f5c6cb;
+
+    border-radius:6px;
+
+    padding:12px;
+
+    text-align:center;
+
+    font-weight:bold;
+
+    white-space:pre-line;
+
+}
+
+.preview-footer{
+
+    margin-top:35px;
+
+    text-align:center;
+
+    font-size:12px;
+
+    color:#666;
+
+    border-top:1px solid #ddd;
+
+    padding-top:15px;
+
+    line-height:1.6;
+
+}
+
+.preview-toolbar{
+
+    text-align:center;
+
+    margin:20px;
+
+}
+
+.preview-toolbar button{
+
+    padding:10px 20px;
+
+    font-size:15px;
+
+    cursor:pointer;
+
+    margin:5px;
+
+}
+
+/* CETAK */
+
+@media print{
+
+    body{
+
+        margin:0;
+
+        background:white;
+
+    }
+
+    .preview-toolbar{
+
+        display:none !important;
+
+    }
+
+    .preview-page{
+
+        margin:0;
+
+        width:100%;
+
+        min-height:auto;
+
+        padding:8mm;
+
+        box-shadow:none;
+
+    }
+	
+	.preview-grid{
+
+    display:grid !important;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:10px;
+
+}
+
+.preview-col{
+
+    break-inside:avoid;
+
+    page-break-inside:avoid;
+
+}
+
+    .preview-title{
+
+        font-size:20px;
+
+    }
+
+    .preview-table{
+
+        font-size:12px;
+
+    }
+
+    .preview-table td{
+
+        padding:6px 8px;
+
+    }
+
+    .preview-result-title{
+
+        font-size:16px;
+
+    }
+
+    .preview-result-value{
+
+        font-size:24px;
+
+    }
+
+    .preview-footer{
+
+        font-size:10px;
+
+    }
+
+}
+
 </style>
 </head>
 <body>
@@ -541,7 +929,7 @@ td.left { text-align:left; }
 <div class="card">
     <div class="grid"><label>Tanggal Pencairan</label><input type="date" id="tanggalCek" class="yellow"></div>
     <div class="grid"><label>Pekerjaan</label>
-        <select id="pekerjaan" class="yellow"><option value="">-- Pilih --</option><option value="Guru">GURU / FUNGSIONAL / PENYULUH (BUP 60 TAHUN)</option><option value="PNS">PNS (BUP 58 TAHUN)</option><option value="PPPK">PPPK (BUP 5 TAHUN DARI TANGGAL SK)</option></select>
+        <select id="pekerjaan" class="yellow"><option value="">-- Pilih --</option><option value="Guru">Guru / Fungsional / Penyuluh (BUP 60 Tahun)</option><option value="PNS">PNS (BUP 58 Tahun)</option><option value="PPPK">PPPK (BUP 5 Tahun dari tanggal SK)</option></select>
     </div>
     <div class="grid"><label>Tanggal Lahir</label><input type="date" id="tanggalLahir" class="yellow"></div>
     <div class="grid"><label>Tanggal SK PPPK</label><input type="date" id="tanggalSK" class="yellow"></div>
@@ -718,7 +1106,7 @@ td.left { text-align:left; }
 
 <div class="btn-group">
     <button class="action" onclick="showKetentuan()">Ketentuan</button>
-    <button class="action" onclick="cetakTanpaTabel()">Cetak PDF (Tanpa Tabel)</button>
+	<button class="action" onclick="previewCetak()">Cetak PDF</button>
     <button class="action" onclick="cetakTabel()">Cetak Tabel</button>
     <button class="action" onclick="clearData()">Clear</button>
 </div>
@@ -1479,6 +1867,234 @@ window.addEventListener("click", function(e){
     }
 });
 
+// =====================================
+// PREVIEW CETAK
+// =====================================
+
+function previewCetak(){
+
+    hitung();
+
+    const preview = window.open("", "_blank");
+
+    if(!preview){
+        alert("Popup diblokir browser.");
+        return;
+    }
+
+    const template =
+        document.getElementById("printPreview").cloneNode(true);
+
+    template.style.display="block";
+    template.removeAttribute("id");
+
+    preview.document.open();
+
+    preview.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+
+<title>Preview Cetak</title>
+
+<style>
+
+${document.querySelector("style").innerHTML}
+
+body{
+
+background:#ececec;
+
+margin:0;
+
+padding:20px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
+`);
+
+    preview.document.close();
+
+    preview.document.body.appendChild(template);
+	
+const now = new Date();
+
+const tanggalCetak = now.toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+});
+
+preview.document.getElementById("pvTanggalCetak").textContent = tanggalCetak;
+	
+	// ===============================
+// TOOLBAR PREVIEW
+// ===============================
+
+const toolbar = preview.document.createElement("div");
+
+toolbar.className = "preview-toolbar";
+
+toolbar.innerHTML = `
+<button onclick="window.print()">
+🖨 Cetak
+</button>
+
+<button onclick="window.close()">
+❌ Tutup
+</button>
+`;
+
+preview.document.body.insertBefore(
+    toolbar,
+    preview.document.body.firstChild
+);
+
+    const d = preview.document;
+	const t = template;
+	
+	function formatTanggalIndonesia(tanggal){
+
+    if(!tanggal) return "-";
+
+    const bulan=[
+
+        "Januari","Februari","Maret",
+
+        "April","Mei","Juni",
+
+        "Juli","Agustus","September",
+
+        "Oktober","November","Desember"
+
+    ];
+
+    const d=new Date(tanggal);
+
+    return d.getDate()+" "+bulan[d.getMonth()]+" "+d.getFullYear();
+
+}
+
+    const getValue=(id)=>{
+
+        const el=document.getElementById(id);
+
+        if(!el) return "";
+
+        return ("value" in el)?el.value:el.innerText;
+
+    };
+
+    const getText=(id)=>{
+
+        const el=document.getElementById(id);
+
+        return el?el.innerText:"";
+
+    };
+
+
+    /* ===============================
+       DATA NASABAH
+    =============================== */
+
+    d.getElementById("pvNama").innerText=getValue("namaNasabah");
+
+    d.getElementById("pvMarketing").innerText=getValue("namaPetugas");
+
+    d.getElementById("pvTanggal").innerText=
+	formatTanggalIndonesia(getValue("tanggalCek"));
+
+    const pekerjaanSelect = document.getElementById("pekerjaan");
+
+	d.getElementById("pvPekerjaan").innerText =
+	pekerjaanSelect.options[pekerjaanSelect.selectedIndex].text;
+
+    d.getElementById("pvLahir").innerText=
+	formatTanggalIndonesia(getValue("tanggalLahir"));
+
+    d.getElementById("pvSK").innerText=
+	formatTanggalIndonesia(getValue("tanggalSK"));
+
+    d.getElementById("pvUmur").innerText=getText("hasilUmur");
+
+
+    /* ===============================
+       DATA KREDIT
+    =============================== */
+
+    d.getElementById("pvGaji").innerText=formatRupiah(getValue("gaji"));
+
+    d.getElementById("pvPenghasilan").innerText=formatRupiah(getValue("penghasilanLain"));
+
+    d.getElementById("pvAng1").innerText=formatRupiah(getValue("angsuran1"));
+
+    d.getElementById("pvAng2").innerText=formatRupiah(getValue("angsuran2"));
+
+    d.getElementById("pvPlafon").innerText=formatRupiah(getValue("plafonInput"));
+
+    d.getElementById("pvJW").innerText=getValue("jangkaWaktu")+" Bulan";
+
+    d.getElementById("pvBunga").innerText=getValue("bunga")+" %";
+
+    d.getElementById("pvAngsuran").innerText=getText("angsuran");
+
+    d.getElementById("pvTotal").innerText=getText("totalAngsuran");
+
+    d.getElementById("pvSisa").innerText=getText("sisaGaji");
+
+    d.getElementById("pvPersen").innerText=getText("persentase");
+
+
+    /* ===============================
+       BIAYA
+    =============================== */
+
+    d.getElementById("pvAdmin").innerText=getText("nominalAdmin");
+
+    d.getElementById("pvJamkrida").innerText=getText("nominalJamkrida");
+
+    d.getElementById("pvAskrida").innerText=getText("nominalAskrida");
+
+    d.getElementById("pvChubb").innerText=getText("nominalChubb");
+
+    d.getElementById("pvTotalAsuransi").innerText=getText("totalAsuransi");
+
+    d.getElementById("pvBlokir").innerText=
+	formatRupiah(getValue("saldoBlokir"));
+
+    d.getElementById("pvPelunasan1").innerText=
+	formatRupiah(getValue("pelunasan1"));
+
+    d.getElementById("pvPelunasan2").innerText=
+	formatRupiah(getValue("pelunasan2"));
+
+
+    /* ===============================
+       HASIL
+    =============================== */
+
+    d.getElementById("pvSisaNasabah").innerText=getText("sisaNasabah");
+
+    d.getElementById("pvWarning").innerHTML=
+        document.getElementById("peringatan").innerHTML;
+
+console.log("Preview :", d.getElementById("pvTanggalCetak"));
+console.log("Template :", t.querySelector("#pvTanggalCetak"));
+
+
+}
 
 </script>
 
@@ -1807,6 +2423,122 @@ window.addEventListener("click", function(e){
   </span>
 </div>
 
+<!-- ===========================
+     PREVIEW CETAK
+=========================== -->
+
+<div id="printPreview" style="display:none;">
+
+<div class="preview-page">
+
+    <div class="preview-title">
+        SIMULASI KREDIT BANK NTT
+    </div>
+	
+	<div class="preview-info">
+
+    <div>
+        <strong>Nama Petugas</strong> :
+        <span id="pvMarketing"></span>
+    </div>
+
+    <div>
+        <strong>Tanggal Cetak</strong> :
+        <span id="pvTanggalCetak"></span>
+    </div>
+
+</div>
+
+    <div class="preview-grid">
+
+        <!-- KOLOM KIRI -->
+        <div class="preview-col">
+
+            <table class="preview-table">
+
+                <tr class="section">
+                    <td colspan="2">DATA NASABAH</td>
+                </tr>
+
+                <tr><td>Nama Nasabah</td><td id="pvNama"></td></tr>
+                <tr><td>Tanggal Pencairan</td><td id="pvTanggal"></td></tr>
+                <tr><td>Pekerjaan</td><td id="pvPekerjaan"></td></tr>
+                <tr><td>Tanggal Lahir</td><td id="pvLahir"></td></tr>
+                <tr><td>Tanggal SK PPPK</td><td id="pvSK"></td></tr>
+                <tr><td>Umur & Masa Kerja</td><td id="pvUmur"></td></tr>
+
+            </table>
+
+            <table class="preview-table">
+
+                <tr class="section">
+                    <td colspan="2">DATA KREDIT</td>
+                </tr>
+
+                <tr><td>Gaji</td><td id="pvGaji"></td></tr>
+                <tr><td>Penghasilan Lain</td><td id="pvPenghasilan"></td></tr>
+                <tr><td>Angsuran Berjalan 1</td><td id="pvAng1"></td></tr>
+                <tr><td>Angsuran Berjalan 2</td><td id="pvAng2"></td></tr>
+                <tr><td>Plafon Kredit</td><td id="pvPlafon"></td></tr>
+                <tr><td>Jangka Waktu</td><td id="pvJW"></td></tr>
+                <tr><td>Bunga</td><td id="pvBunga"></td></tr>
+                <tr><td>Angsuran Bulanan</td><td id="pvAngsuran"></td></tr>
+                <tr><td>Total Angsuran</td><td id="pvTotal"></td></tr>
+                <tr><td>Sisa Gaji</td><td id="pvSisa"></td></tr>
+                <tr><td>Persentase</td><td id="pvPersen"></td></tr>
+
+            </table>
+
+        </div>
+
+        <!-- KOLOM KANAN -->
+        <div class="preview-col">
+
+            <table class="preview-table">
+
+                <tr class="section">
+                    <td colspan="2">BIAYA</td>
+                </tr>
+
+                <tr><td>Administrasi</td><td id="pvAdmin"></td></tr>
+                <tr><td>Jamkrida</td><td id="pvJamkrida"></td></tr>
+                <tr><td>Askrida</td><td id="pvAskrida"></td></tr>
+                <tr><td>Chubb Life</td><td id="pvChubb"></td></tr>
+                <tr><td>Total Asuransi</td><td id="pvTotalAsuransi"></td></tr>
+                <tr><td>Saldo Blokir</td><td id="pvBlokir"></td></tr>
+                <tr><td>Pelunasan 1</td><td id="pvPelunasan1"></td></tr>
+                <tr><td>Pelunasan 2</td><td id="pvPelunasan2"></td></tr>
+
+            </table>
+
+            <div class="preview-result">
+
+                <div class="preview-result-title">
+                    SISA DITERIMA NASABAH
+                </div>
+
+                <div class="preview-result-value"
+                     id="pvSisaNasabah">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="preview-footer">
+
+        Version 1.1.0
+
+    </div>
+
+</div>
+
+
+</div>
+
+</div>
 			
 </body>
 </html>
